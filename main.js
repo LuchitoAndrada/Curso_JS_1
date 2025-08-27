@@ -1,3 +1,5 @@
 let numero1 = 4;
 numero1 = 10;
-const numero2 = 5;
+
+export const n = numero1;
+export const numero2 = 5;
