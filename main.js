@@ -19,9 +19,11 @@ if (opcion == 1 || opcion == 2 || opcion == 3 || opcion == 4) {
   } else if (opcion == 2) {
     let resta = n1 - n2;
     console.log(`La resta de los numeros ${n1} y ${n2} es ${resta}`);
+
   } else if (opcion == 3) {
     let multiplicacion = n1 * n2;
     console.log(`La multiplicación de los numeros ${n1} y ${n2} es ${multiplicacion}`);
+    
   } else if (opcion == 4) {
     let division = n1 / n2;
     console.log(`La division de los numeros ${n1} y ${n2} es ${division}`);
