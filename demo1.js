@@ -1,11 +1,10 @@
 //
 let opcion = parseInt(prompt(`Elige una opción:\n 1. Pedir 2 números y sumarlos.\n 2. Cuenta regresiva desde un número mayor a 10.\n 3. Pedir nombre y edad.`));
 
-
-if(isNaN(opcion) || opcion < 1 || opcion > 3) {
+if (isNaN(opcion) || opcion < 1 || opcion > 3) {
     alert("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
-}else{
-    switch(opcion) {
+} else {
+    switch (opcion) {
         case 1:
             let num1 = parseInt(prompt("Ingresa el primer número:"));
             let num2 = parseInt(prompt("Ingresa el segundo número:")); 
@@ -17,8 +16,18 @@ if(isNaN(opcion) || opcion < 1 || opcion > 3) {
             }
             break;
 
+        case 2:
+            let inicio = parseFloat(prompt("Ingresa un número mayor a 10"));
+
+            if (!isNaN(inicio) && inicio > 10 && inicio % 1 === 0) {
+                console.log(`Cuenta regresiva desde ${inicio}:`);
+                for (let i = inicio; i >= 0; i--) {
+                    console.log(i);
+                }
+            } else {
+                alert("Error: Debes ingresar un número entero mayor a 10.");
+            }
+            break;
         }
     }
-
-
 
