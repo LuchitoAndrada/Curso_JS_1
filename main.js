@@ -5,6 +5,7 @@ let n2 = parseInt(prompt("Ingrese el segundo numero a operar: "));
 
 if (isNaN(n1) || isNaN(n2)) {
   alert("Los valores ingresados deben ser un numero.");
+  
 } else {
   alert(
     "-----------------MENU-----------------\nSeleccione la operación que desea realizar:\n1.Suma\n2.Resta\n3.Multiplicación\n4.División"
@@ -41,4 +42,13 @@ if (isNaN(n1) || isNaN(n2)) {
       console.log("El valor ingresado no corresponde a los disponibles en el menú de opciones.");
     }
   }
+}
+
+switch (key) {
+  case value:
+    
+    break;
+
+  default:
+    break;
 }
