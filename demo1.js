@@ -5,6 +5,7 @@ let opcion = parseInt(
   )
 );
 
+
 switch (opcion) {
   // Suma de dos números
   case 1:
@@ -82,4 +83,5 @@ switch (opcion) {
     default:
         console.log("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
         alert("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
+    break;
 }
