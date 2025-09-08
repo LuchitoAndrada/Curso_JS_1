@@ -17,7 +17,7 @@ if (isNaN(opcion) || opcion < 1 || opcion > 3) {
                 break;
             }
 
-            //declarar variable num2, pasar a entero el valor ingresado por el usuario
+            //declarar variable num2, pasar a entero el valor ingresado por el usuario.
             let num2 = parseInt(prompt("Ingresa el segundo número:")); 
             if (Number.isNaN(num2) || num2 <= 0 ) {
                 console.log("Error: Debes ingresar números válidos.");
