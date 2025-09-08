@@ -1,9 +1,11 @@
 //menu de opciones
-let opcion = parseInt(
-  prompt(
-    `Elige una opción:\n 1. Pedir 2 números y sumarlos.\n 2. Cuenta regresiva desde un numero mayor a 10 hasta 0.\n 3. Pedir nombre y edad.`
-  )
-);
+let opcion = parseInt(prompt(`Elige una opción:\n 1. Pedir 2 números y sumarlos.\n 2. Cuenta regresiva desde un numero mayor a 10 hasta 0.\n 3. Pedir nombre y edad.`));
+
+//si la opcion no es un numero entre 1 y 3
+if (isNaN(opcion) || opcion < 1 || opcion > 3) {
+    console.log("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
+    alert("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
+} else {
 
 switch (opcion) {
   // Suma de dos números
@@ -82,4 +84,5 @@ switch (opcion) {
     default:
         console.log("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
         alert("Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales.");
+}
 }
