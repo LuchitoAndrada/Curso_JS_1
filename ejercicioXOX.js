@@ -1,11 +1,11 @@
 function calcularBeca(promedio, ingreso, esSobrino) {
     // Lógica para decidir la beca
     if (promedio >= 9 && (ingreso <= 1000 || esSobrino)) {
-        return "Beca obtiene la beca de $1000";
+        return "Felicidades, obtienes una beca del 100%";
     } else if (promedio >= 7 && ingreso <= 500) {
-        return "Beca obtiene la beca de $500";   
+        return "Felicidades, obtienes una beca del 50%";   
     } else {
-        return "No obtienes beca ";
+        return "Oh, lo siento, no eres elegible para una beca";
     }
 }
 
