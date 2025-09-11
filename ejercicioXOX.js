@@ -1,3 +1,4 @@
+
 function calcularBeca(promedio, ingreso, esSobrino) {
     // Lógica para decidir la beca
     if (promedio >= 9 && (ingreso <= 1000 || esSobrino)) {
@@ -13,6 +14,11 @@ function calcularBeca(promedio, ingreso, esSobrino) {
 let promedio = parseInt(prompt("Ingresa tu promedio:"));
 let ingreso = parseInt(prompt("Ingresa tu ingreso mensual:"));
 let sobrino = prompt("¿Eres sobrino de algún director? (si/no)");
+
+//si el promedio o ingreso son nan o la respuesta de sobreino 
+if (isNaN(promedio) || isNaN(ingreso)) {
+    alert("Error: Debes ingresar valores válidos.");
+}
 
 // Convertimos la respuesta a valor lógico
 let esSobrino = false;
