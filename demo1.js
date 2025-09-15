@@ -93,5 +93,5 @@ switch (opcion) {
     alert(
       "Opción inválida. Por favor, elige una opción entre 1 y 3. No ingreses letras o caracteres especiales."
     );
-    break;
+    // break;
 }
