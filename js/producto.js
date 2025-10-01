@@ -8,7 +8,7 @@ const productoMain = `<div class="container">
       <div class="row g-4 align-items-center">
         
         <div class="col-md-6 text-center p-4">
-          <img src="${producto.imagen}" class="img-fluid rounded shadow" alt="${producto.nombre}">
+          <img src="${producto.imagen}" class="img-fluid rounded shadow" alt="${producto.nombre}" style="max-width: 300px;">
         </div>
         
 
