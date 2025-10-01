@@ -1,21 +1,48 @@
 //crear objeto
 
 const cuenta = {
-    //propiedades
-    titular: "Valeria Ortiz",
-    saldo: 10_000_000,
-    depositar: function(monto){
-        let total = monto+this.saldo
-        console.log(`Se depositaron ${monto} y su saldo total actual es ${total}.`)
+    titular: "Juan Pérez",
+    saldo: 1000,
+
+    depositar: function(monto) {
+        this.saldo += monto;
+        console.log(`Se depositaron ${monto}. Saldo actual: ${this.saldo}`);
     },
-    retirar: function (monto) {
-        if (monto<=this.saldo){
-            let total = this.saldo-monto
-            console.log(`Se retiraron ${monto} y su saldo actual es de ${total}`)
-        }else{
-            console.log(`El saldo es insuficiente. Saldo actual`)
+
+    retirar: function(monto) {
+        if (monto <= this.saldo) {
+            this.saldo -= monto;
+            console.log(`Se retiraron ${monto}. Saldo actual: ${this.saldo}`);
+        } else {
+            console.log(`Fondos insuficientes. Saldo actual: ${this.saldo}`);
         }
     }
-}
+};
 
-monto = prompt()
+
+// menu
+let opcion = prompt(
+`Seleccione una opción:
+1. Depositar
+2. Retirar
+3. Consultar saldo`);
+
+switch (opcion) {
+    case "1":
+        let montoDeposito = parseFloat(prompt("Ingrese el monto a depositar:"));
+        cuenta.depositar(montoDeposito);
+        break;
+
+    case "2":
+        let montoRetiro = parseFloat(prompt("Ingrese el monto a retirar:"));
+        cuenta.retirar(montoRetiro);
+        break;
+
+    case "3":
+        console.log(`Saldo actual: ${cuenta.saldo}`);
+        break;
+
+    default:
+        console.log("Opción no válida");
+        break;
+}
