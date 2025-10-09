@@ -1,32 +1,39 @@
-const id = Number(location.search.split('=')[1]);
 
-const main = document.querySelector('main section');
+//  Esta línea obtiene el número del producto desde la URL
+// Ejemplo: si la URL es producto.html?prod=2
+// location.search = "?prod=2"
+// split("=") separa ["?prod", "2"]
+// [1] accede al segundo elemento del arreglo → "2"
+// Number() lo convierte a número → 2
+const id = Number(location.search.split("=")[1]);
 
-const producto = data.find((prod) => prod.id === id);
+//Busca dentro del array data el objeto (producto) cuyo id sea igual al número que obtuvimos de la URL
+const producto = data.find(item => item.id === id)
 
-const productoMain = `<div class="container">
-      <div class="row g-4 align-items-center">
-        
-        <div class="col-md-6 text-center p-4">
-          <img src="${producto.imagen}" class="img-fluid rounded shadow" alt="${producto.nombre}" style="max-width: 300px;">
-        </div>
-        
+//obtenemos el main de producto.html
+const main = document.getElementById("detalleProducto");
 
-        <div class="col-md-6">
-          <h2 class="fw-bold mb-3">${producto.nombre}</h2>
-          <p class="text-muted mb-1"><strong>Categoría:</strong> ${producto.categoria}</p>
-          <p class="mb-1"><strong>Código:</strong> ${producto.id}</p>
-          <p class="mb-1"><strong>Stock:</strong> ${producto.stock}</p>
-          <p class="fs-4 text-success fw-bold mt-3">Precio: S/ ${producto.precio}</p>
-          
-          <div class="mt-4">
-            <a href="./index.html" class="btn btn-outline-primary me-2">← Regresar</a>
-          </div>
-        </div>
-        
+//condicional para evaluar que producto exista
+if (producto) {
+    const productoHTML = `
+    <div class="row g-4 align-items-center">
+      <div class="col-md-6 text-center">
+        <img src="${producto.imagen}" class="img-fluid rounded shadow" alt="${producto.nombre}" style="max-width: 300px;">
       </div>
-    </div>`
+      <div class="col-md-6">
+        <h2 class="fw-bold mb-3">${producto.nombre}</h2>
+        <p><strong>Descripción:</strong> ${producto.descripcion}</p>
+        <p><strong>Categoría:</strong> ${producto.categoria}</p>
+        <p><strong>ID:</strong> ${producto.id}</p>
+        <p><strong>Stock:</strong> ${producto.stock}</p>
+        <p class="text-success fw-bold fs-4">$${producto.precio}</p>
+        <a href="./index.html" class="btn btn-outline-primary mt-3">← Regresar</a>
+      </div>
+    </div>
+  `;
 
-main.innerHTML = productoMain;
-
-
+  //insertamos card dentro del main de producto.html
+  main.innerHTML = productoHTML;
+}else{
+    main.innerHTML = `<p class="text-danger">Producto no encontrado.</p>`;
+}
