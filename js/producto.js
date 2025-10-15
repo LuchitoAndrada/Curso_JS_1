@@ -27,7 +27,7 @@ if (producto) {
         <p><strong>ID:</strong> ${producto.id}</p>
         <p><strong>Stock:</strong> ${producto.stock}</p>
         <p class="text-success fw-bold fs-4">$${producto.precio}</p>
-        <a href="./index.html" class="btn btn-outline-primary mt-3">← Regresar</a>
+        <a href="./index.html" class="btn btn-outline-dark mt-3">← Regresar</a>
       </div>
     </div>
   `;

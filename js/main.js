@@ -35,3 +35,42 @@ document.querySelectorAll(".categoria-link").forEach((link) => {
     mostrarProductos(filtrados); // Muestra solo los filtrados
   });
 });
+
+
+
+// Clase 18 - Buscador// Capturamos elementos 
+const buscarInput = document.getElementById("buscarInput");
+const botonBuscar = document.getElementById("botonBuscar");
+const botonLimpiar = document.getElementById("botonLimpiar");
+
+
+// --- BUSCADOR ---
+botonBuscar.addEventListener("click", () => { // cuando se hace clic en el botón de buscar
+  const buscarValor = buscarInput.value        // toma el valor ingresado en el input de búsqueda
+    .toLowerCase()                            // convierte el texto a minúsculas para ignorar mayúsculas/minúsculas
+    .normalize("NFD")                         // normaliza el texto para separar los caracteres con tilde
+    .replace(/[\u0300-\u036f]/g, "")          // elimina los diacríticos (tildes) del texto
+    .trim();                                  // elimina espacios al inicio y final
+
+  const filtro = data.filter(prod =>          // filtra los productos en el array 'data'
+    prod.nombre                               // toma el nombre de cada producto
+      .toLowerCase()                         // convierte el nombre a minúsculas
+      .normalize("NFD")                      // normaliza el nombre para separar tildes
+      .replace(/[\u0300-\u036f]/g, "")       // elimina los diacríticos del nombre
+      .includes(buscarValor)      // verifica si el nombre incluye el texto buscado 
+  );
+
+  mostrarProductos(filtro);                   // Muestra los productos filtrados en pantalla
+
+  // Si no hay resultados, mostrar mensaje
+  if (filtro.length === 0) {                  // Si el array filtrado está vacio
+    main.innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos con ese nombre.</p>`; 
+    // Muestra mensaje de "no encontrado"
+  }
+});
+
+// --- LIMPIAR BUSCADOR ---
+botonLimpiar.addEventListener("click", () => { // cuando se hace clic en el botón de limpiar
+  buscarInput.value = "";   // limpia el valor del input de busqueda
+  mostrarProductos(data);  // muestra todos los productos (restablece la vista)
+});

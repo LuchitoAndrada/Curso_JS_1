@@ -11,17 +11,38 @@
       rel="stylesheet"
     />
 </head>
+
+<!-- Cambiar el color del brillo que aparece alrededor del input  -->
+<style>
+  input#buscarInput:focus {
+    box-shadow: 0 0 0 0.25rem rgba(70, 75, 80, 0.5); 
+    border-color: #141513; 
+  }
+</style>
+
 <body>
-    <header>
+    <!-- Menu -->
+    <header></header>
 
-    </header>
+    <!-- Buscar y Limpiar -->
+    <section class="input-group mb-4 pt-5 px-4 justify-content-center">
+        <input type="text"  id="buscarInput" class="form-control"  placeholder="Buscar productos..."/>
+        <button type="button" id="botonBuscar" class="btn btn-dark">Buscar</button>
+        <button type="button" id="botonLimpiar" class="btn btn-outline-dark">Limpiar</button>
+    </section>
 
+    <!-- Listado de Productos -->
     <main class="container py-4">
       <h1 class="text-center mb-4">Productos Disponibles</h1>
       <section id="contenedorProductos" class="d-flex flex-wrap justify-content-center gap-4">
 
       </section>
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-center py-3">
+        <p class="mb-0 text-light">&copy; 2025 Beauty you. Todos los derechos reservados.</p>  
+    </footer>
 
     <!-- Scripts -->
     <script src="/js/navbar.js"></script>
