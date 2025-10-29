@@ -14,72 +14,76 @@
 
   <style>
     input.form-control:focus {
-    box-shadow: 0 0 0 0.25rem rgba(70, 75, 80, 0.5); 
-    border-color: #141513; 
-  }
+      box-shadow: 0 0 0 0.25rem rgba(70, 75, 80, 0.5);
+      border-color: #141513;
+    }
   </style>
 
-  <body class="bg-light">
+  <!-- En login.html, cambiar el body y agregar los scripts -->
+  <body id="login" class="bg-light">
+    <!-- Header que se llenará con el navbar -->
     <header></header>
     
-
-    <!-- Formulario de login centrado -->
-    <div
-      class="container d-flex justify-content-center align-items-center"
-      style="min-height: 90vh;"
-    >
+    <!-- Contenedor principal centrado verticalmente -->
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+      <!-- Tarjeta que contiene el formulario -->
       <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
         <h2 class="text-center text-dark mb-4">Iniciar Sesión</h2>
 
+        <!-- Formulario de login - importante tener los atributos name -->
         <form>
-          <!-- Campo de usuario -->
+          <!-- Campo para el email -->
           <div class="mb-3">
-            <label for="usuario" class="form-label">Usuario</label>
-            <input
-              type="text"
-              class="form-control"
-              id="usuario"
-              placeholder="Ingresa tu usuario"
-              required
+            <label class="form-label">Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              class="form-control" 
+              placeholder="Ingresa tu email" 
+              required 
             />
           </div>
 
-          <!-- Campo de contraseña -->
+          <!-- Campo para la contraseña -->
           <div class="mb-3">
-            <label for="contrasena" class="form-label">Contraseña</label>
-            <input
-              type="password"
-              class="form-control"
-              id="contrasena"
-              placeholder="Ingresa tu contraseña"
-              required
+            <label class="form-label">Contraseña</label>
+            <input 
+              type="password" 
+              name="contraseña" 
+              class="form-control" 
+              placeholder="Ingresa tu contraseña" 
+              required 
             />
           </div>
 
-          <!-- Botón de inicio -->
+          <!-- Elemento donde mostraremos mensajes de error -->
+          <p id="mensajeLogin" class="text-danger"></p>
+
+          <!-- Botón para enviar el formulario -->
           <div class="d-grid mb-3">
-            <button type="submit" class="btn btn-dark" id="botonEntrar">Entrar</button>
+            <button type="submit" class="btn btn-dark">Entrar</button>
           </div>
 
-          <!-- Enlace de regreso -->
+          <!-- Enlace para volver al inicio -->
           <div class="text-center">
-            <a href="/index.html" class="text-decoration-none text-dark">
-              ← Volver al inicio
-            </a>
+            <a href="/index.html" class="text-decoration-none text-dark">← Volver al inicio</a>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer de la página -->
     <footer class="bg-dark text-center py-3">
         <p class="mb-0 text-light">&copy; 2025 Beauty you. Todos los derechos reservados.</p>  
     </footer>
 
-    <!-- Script Bootstrap -->
+    <!-- Bootstrap JS para funcionalidades del framework -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="/js/navbar.js"></script>
+    
+    <!-- Nuestros scripts personalizados -->
+    <script src="/js/navbar.js"></script>                          <!-- Navbar dinámico -->
+    <script src="/js/constantes.js"></script>                      <!-- Credenciales de login -->
+    <script src="/js/login.js"></script>                           <!-- Lógica del formulario login -->
+    <script src="/js/redireccionSiAutenticado.js"></script>        <!-- Redirección si ya está logueado -->
   </body>
-
 </html>

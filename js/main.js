@@ -1,76 +1,114 @@
-//creamos variable main para traer el main del index que es donde vamos a mostrar la card con el resumen del producto
+// js/main.js
+// Este archivo maneja la lógica de la página principal (index.html)
+
+// Capturamos el elemento main donde mostraremos los productos
 const main = document.querySelector("#contenedorProductos");
 
 // Función que recibe una lista de productos y los muestra en pantalla
 function mostrarProductos(productos) {
-  //limpiamos lo que habia antes
-  main.innerHTML = "";
-  //hacemos forEach para que por cada producto de data se introduzca una card con los datos de ese prodocto
-  productos.forEach((producto) => {
-    main.innerHTML += `
-    <div class="card m-3" style="width: 18rem;">
-      <img src="${producto.imagen}" class="card-img-top" alt="${producto.nombre}">
-      <div class="card-body">
-        <h5 class="fw-bold mb-3">${producto.nombre}</h5>
-        <p class="text-muted"><strong>Precio: </strong> $${producto.precio.toLocaleString()}</p>
-        <p class="text-muted"><strong>Categoria: </strong>${producto.categoria}</p>
-        <a href="./producto.html?prod=${
-          producto.id       
-        }" class="btn btn-dark">Ver detalle</a>
-      </div>
-    </div>`;
-  });
+    // Limpiamos el contenido anterior del main
+    main.innerHTML = "";
+    
+    // Verificamos si hay productos para mostrar
+    if (productos.length === 0) {
+        // Si no hay productos, mostramos mensaje
+        main.innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos.</p>`;
+        return; // Salimos de la función
+    }
+    
+    // Recorremos cada producto del array con forEach
+    productos.forEach((producto) => {
+        // Por cada producto, agregamos una tarjeta al main - ESTILO ORIGINAL
+        main.innerHTML += `
+        <div class="card m-3" style="width: 18rem;">
+            <!-- Imagen del producto -->
+            <img src="${producto.imagen}" class="card-img-top" alt="${producto.nombre}">
+            <div class="card-body">
+                <!-- Nombre del producto -->
+                <h5 class="fw-bold mb-3">${producto.nombre}</h5>
+                <!-- Precio formateado con separadores de miles -->
+                <p class="text-muted"><strong>Precio: </strong> $${producto.precio.toLocaleString()}</p>
+                <!-- Categoría del producto -->
+                <p class="text-muted"><strong>Categoría: </strong>${producto.categoria}</p>
+                <!-- Enlace para ver el detalle del producto -->
+                <!-- El parámetro ?prod=ID lleva el ID del producto a la página de detalle -->
+                <a href="./producto.html?prod=${producto.id}" class="btn btn-dark">Ver detalle</a>
+            </div>
+        </div>`;
+    });
 }
 
-//mostramos todos los productos cuando se abre la pagina
-mostrarProductos(data); //porque en data es en donde estan todos los productos
+// Mostramos todos los productos cuando se abre la página por primera vez
+mostrarProductos(data);
 
-//añadimos evento a cada categoria del navbar para que al dar click sobre alguna solo nos muestre los productos con esa categoria
-//Buscar todos los enlaces del navbar y agregarles un "click"
-document.querySelectorAll(".categoria-link").forEach((link) => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault(); // Evita que recargue la página
-    const categoria = e.target.dataset.categoria; // Saca la categoría del enlace
-    const filtrados = data.filter((p) => p.categoria === categoria); // Filtra los productos
-    mostrarProductos(filtrados); // Muestra solo los filtrados
-  });
+// Añadimos evento a cada categoría del navbar para filtrar productos
+document.querySelectorAll(".categoria-link").forEach((enlace) => {
+    // Por cada enlace de categoría, agregamos un evento click
+    enlace.addEventListener("click", (evento) => {
+        // Prevenimos el comportamiento por defecto del enlace (navegación)
+        evento.preventDefault();
+        
+        // Obtenemos la categoría del atributo data-categoria del enlace clickeado
+        const categoria = evento.target.dataset.categoria;
+        
+        // Filtramos los productos que coincidan con la categoría seleccionada
+        // filter() crea un nuevo array con los elementos que cumplen la condición
+        const productosFiltrados = data.filter((producto) => producto.categoria === categoria);
+        
+        // Mostramos solo los productos filtrados
+        mostrarProductos(productosFiltrados);
+    });
 });
 
-
-
-// Clase 18 - Buscador// Capturamos elementos 
+// --- BUSCADOR ---
+// Capturamos los elementos del buscador
 const buscarInput = document.getElementById("buscarInput");
 const botonBuscar = document.getElementById("botonBuscar");
 const botonLimpiar = document.getElementById("botonLimpiar");
 
+// Evento para el botón de buscar
+botonBuscar.addEventListener("click", () => {
+    // Obtenemos y normalizamos el texto de búsqueda
+    const textoBusqueda = buscarInput.value
+        .toLowerCase()                    // Convertimos a minúsculas para búsqueda case-insensitive
+        .normalize("NFD")                 // Normalizamos el texto para separar caracteres con tildes
+        .replace(/[\u0300-\u036f]/g, "")  // Eliminamos los diacríticos (tildes)
+        .trim();                          // Eliminamos espacios al inicio y final
 
-// --- BUSCADOR ---
-botonBuscar.addEventListener("click", () => { // cuando se hace clic en el botón de buscar
-  const buscarValor = buscarInput.value        // toma el valor ingresado en el input de búsqueda
-    .toLowerCase()                            // convierte el texto a minúsculas para ignorar mayúsculas/minúsculas
-    .normalize("NFD")                         // normaliza el texto para separar los caracteres con tilde
-    .replace(/[\u0300-\u036f]/g, "")          // elimina los diacríticos (tildes) del texto
-    .trim();                                  // elimina espacios al inicio y final
+    // Filtramos los productos cuyo nombre incluya el texto de búsqueda
+    const productosFiltrados = data.filter(producto =>
+        producto.nombre
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .includes(textoBusqueda)      // Verifica si el nombre incluye el texto buscado
+    );
 
-  const filtro = data.filter(prod =>          // filtra los productos en el array 'data'
-    prod.nombre                               // toma el nombre de cada producto
-      .toLowerCase()                         // convierte el nombre a minúsculas
-      .normalize("NFD")                      // normaliza el nombre para separar tildes
-      .replace(/[\u0300-\u036f]/g, "")       // elimina los diacríticos del nombre
-      .includes(buscarValor)      // verifica si el nombre incluye el texto buscado 
-  );
+    // Mostramos los productos filtrados
+    mostrarProductos(productosFiltrados);
 
-  mostrarProductos(filtro);                   // Muestra los productos filtrados en pantalla
-
-  // Si no hay resultados, mostrar mensaje
-  if (filtro.length === 0) {                  // Si el array filtrado está vacio
-    main.innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos con ese nombre.</p>`; 
-    // Muestra mensaje de "no encontrado"
-  }
+    // Si no hay resultados, mostramos mensaje
+    if (productosFiltrados.length === 0) {
+        main.innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos con ese nombre.</p>`;
+    }
 });
 
 // --- LIMPIAR BUSCADOR ---
-botonLimpiar.addEventListener("click", () => { // cuando se hace clic en el botón de limpiar
-  buscarInput.value = "";   // limpia el valor del input de busqueda
-  mostrarProductos(data);  // muestra todos los productos (restablece la vista)
+botonLimpiar.addEventListener("click", () => {
+    // Limpiamos el campo de búsqueda
+    buscarInput.value = "";
+    // Mostramos todos los productos nuevamente
+    mostrarProductos(data);
+});
+
+// --- BUSCADOR CON TECLA ENTER --- (MEJORA ADICIONAL OPCIONAL)
+// Permitir buscar presionando Enter en el input
+buscarInput.addEventListener("keypress", (evento) => {
+    // Verificamos si la tecla presionada es Enter (código 13)
+    if (evento.key === "Enter") {
+        // Prevenimos el comportamiento por defecto (enviar formulario)
+        evento.preventDefault();
+        // Disparamos el evento de click en el botón buscar
+        botonBuscar.click();
+    }
 });
