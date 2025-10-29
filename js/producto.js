@@ -26,6 +26,7 @@ function mostrarDetalleProducto() {
     // Generamos el HTML para mostrar el detalle del producto
     document.getElementById("detalleProducto").innerHTML = `
         <br><div class="row justify-content-center">
+        <br><div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm">
                     <div class="row g-0">
@@ -54,6 +55,8 @@ function mostrarDetalleProducto() {
                                 <p class="card-text text-muted mb-4" style="font-size: 0.9rem;">
                                     ${producto.descripcion}
                                 </p>
+                               
+
                                
 
                                 ${estaLogueado ? 
