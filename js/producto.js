@@ -31,13 +31,11 @@ function mostrarDetalleProducto() {
                     <div class="row g-0">
                         <!-- Columna de la imagen - más compacta -->
                         <div class="col-md-5">
-                            <img src="${producto.imagen}" 
-                                 class="img-fluid rounded-start h-100" 
-                                 alt="${producto.nombre}"
+                            <img src="${producto.imagen}" class="img-fluid rounded-start h-100" alt="${producto.nombre}"
                                  style="object-fit: cover; max-height: 350px;">
                         </div>
                         
-                        <!-- Columna de la información - diseño más elegante -->
+                        <!-- Columna de la información -->
                         <div class="col-md-7">
                             <div class="card-body p-4">
                                 <!-- Header compacto -->
@@ -48,7 +46,7 @@ function mostrarDetalleProducto() {
                                 
                                 <!-- Precio destacado -->
                                 <div class="mb-3">
-                                    <h5 class="text-dark mb-1">$${producto.precio.toLocaleString()}</h5>
+                                    <h5 class="text-primary mb-4">$${producto.precio.toLocaleString()}</h5>
                                     <h6 class="text-muted">Stock disponible: ${producto.stock}</h6>
                                 </div>
                                 
