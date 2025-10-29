@@ -1,14 +1,14 @@
 // Array con las categorías del ecommerce
 const categorias = ['Aretes', 'Collares', 'Anillos', 'Pulseras', 'Relojes'];
 
-// Variable para almacenar el menú
-let menu = "";
-
 // Agregamos primero el botón Home
-menu += `
+// Variable para almacenar el menú
+let menu = `
   <li class="nav-item">
     <a class="nav-link px-3 home-link" href="./index.html">Home</a>
-  </li>`;
+  </li>
+  `;
+
 
 // Creamos un bucle para generar cada enlace del menú
 for (let categoria of categorias) {
@@ -17,6 +17,12 @@ for (let categoria of categorias) {
       <a class="nav-link px-3 categoria-link" href="#" data-categoria="${categoria}">${categoria}</a>
     </li>`;
 }
+
+//variable para almacenar login
+let login = `
+  <li class="nav-item">
+    <a class="nav-link px-3 login-link" href="./login.html">Login</a>
+  </li>`;
 
 // Obtenemos el header del index
 const header = document.querySelector("header");
@@ -32,6 +38,9 @@ header.innerHTML = `
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         ${menu}
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        ${login}
       </ul>
     </div>
   </div>

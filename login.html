@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <style>
+    input.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(70, 75, 80, 0.5); 
+    border-color: #141513; 
+  }
+  </style>
+
+  <body class="bg-light">
+    <header></header>
+    
+
+    <!-- Formulario de login centrado -->
+    <div
+      class="container d-flex justify-content-center align-items-center"
+      style="min-height: 90vh;"
+    >
+      <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center text-dark mb-4">Iniciar Sesión</h2>
+
+        <form>
+          <!-- Campo de usuario -->
+          <div class="mb-3">
+            <label for="usuario" class="form-label">Usuario</label>
+            <input
+              type="text"
+              class="form-control"
+              id="usuario"
+              placeholder="Ingresa tu usuario"
+              required
+            />
+          </div>
+
+          <!-- Campo de contraseña -->
+          <div class="mb-3">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="contrasena"
+              placeholder="Ingresa tu contraseña"
+              required
+            />
+          </div>
+
+          <!-- Botón de inicio -->
+          <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-dark" id="botonEntrar">Entrar</button>
+          </div>
+
+          <!-- Enlace de regreso -->
+          <div class="text-center">
+            <a href="/index.html" class="text-decoration-none text-dark">
+              ← Volver al inicio
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-center py-3">
+        <p class="mb-0 text-light">&copy; 2025 Beauty you. Todos los derechos reservados.</p>  
+    </footer>
+
+    <!-- Script Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/js/navbar.js"></script>
+  </body>
+
+</html>
