@@ -82,7 +82,7 @@ function mostrarCarrito() {
                     <div class="card-header bg-light">
                         <h5 class="mb-0">Productos en el carrito (${carrito.length})</h5>
                     </div>
-                    <div class="card-body p-0">
+                <div class="card-body p-0">
     `;
     
     // Agregamos cada producto al HTML del carrito
@@ -97,10 +97,7 @@ function mostrarCarrito() {
                 <div class="row align-items-center">
                     <!-- Imagen del producto -->
                     <div class="col-2">
-                        <img src="${producto.imagen}" 
-                             alt="${producto.nombre}" 
-                             class="img-fluid rounded"
-                             style="height: 80px; object-fit: cover;">
+                        <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid rounded" style="height: 80px; object-fit: cover;">
                     </div>
                     
                     <!-- Información del producto -->

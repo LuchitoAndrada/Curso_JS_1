@@ -25,14 +25,13 @@ function mostrarDetalleProducto() {
     
     // Generamos el HTML para mostrar el detalle del producto
     document.getElementById("detalleProducto").innerHTML = `
-        <br><br><br><div class="row justify-content-center">
+        <br><div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm">
                     <div class="row g-0">
-                        <!-- Columna de la imagen - más compacta -->
+                        <!-- Columna de la imagen  -->
                         <div class="col-md-5">
-                            <img src="${producto.imagen}" class="img-fluid rounded-start h-100" alt="${producto.nombre}"
-                                 style="object-fit: cover; max-height: 350px;">
+                            <img src="${producto.imagen}" class="img-fluid rounded-start h-100" alt="${producto.nombre}" style="object-fit: cover; max-height: 350px;">
                         </div>
                         
                         <!-- Columna de la información -->
@@ -55,7 +54,8 @@ function mostrarDetalleProducto() {
                                 <p class="card-text text-muted mb-4" style="font-size: 0.9rem;">
                                     ${producto.descripcion}
                                 </p>
-                                
+                               
+
                                 ${estaLogueado ? 
                                     // SI ESTÁ LOGUEADO: Mostramos controles para comprar
                                     `<div class="border-top pt-3">
@@ -69,7 +69,7 @@ function mostrarDetalleProducto() {
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-dark w-100 mt-3" onclick="agregarAlCarrito(${producto.id})">
+                                                <button class="btn btn-dark w-100" onclick="agregarAlCarrito(${producto.id})">
                                                     <i class="bi bi-cart-plus"></i> Agregar al Carrito
                                                 </button>
                                             </div>
@@ -84,6 +84,13 @@ function mostrarDetalleProducto() {
                                         </small>
                                     </div>`
                                 }
+
+                                <div class="col">
+                                    <button class="btn btn-outline-secondary w-100 mt-2" onclick="window.history.back()">
+                                        🠀 Seguir explorando
+                                    </button>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -171,7 +178,7 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
     });
 }
 
-// Función para agregar productos al carrito CON VALIDACIONES COMPLETAS
+// Función para agregar productos al carrito CON VALIDACIONES 
 function agregarAlCarrito(idProducto) {
     // Capturamos el input del contador para saber cuántas unidades agregar
     const contador = document.querySelector("#contador");
