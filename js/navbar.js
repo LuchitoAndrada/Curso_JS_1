@@ -34,7 +34,7 @@ let sesion = `
          
          <li class="nav-item ms-2">
             <a href="./carrito.html" class="nav-link text-light d-flex align-items-center" style="text-decoration: none;">
-                <img height="40" src="./img/carrito.avif" alt="Carrito" class="me-1" />
+                <img height="25" src="./img/carrito.png" alt="Carrito" class="me-1" />
                 <span id="cantidad-carrito" class="badge bg-light text-dark">${localStorage.getItem("cantidad") || "0"}</span>
             </a>
          </li>

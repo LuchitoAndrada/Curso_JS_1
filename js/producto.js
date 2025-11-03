@@ -72,7 +72,7 @@ function mostrarDetalleProducto() {
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-dark w-100" onclick="agregarAlCarrito(${producto.id})">
+                                                <button class="btn btn-dark w-100" onclick="confirmarAgregarAlCarrito(${producto.id})">
                                                     <i class="bi bi-cart-plus"></i> Agregar al Carrito
                                                 </button>
                                             </div>
@@ -103,6 +103,48 @@ function mostrarDetalleProducto() {
     `;
 }
 
+// Función para mostrar confirmación con SweetAlert2 antes de agregar al carrito -- CLASE 25
+function confirmarAgregarAlCarrito(idProducto) {
+    // Capturamos el input del contador para saber cuántas unidades agregar
+    const contador = document.querySelector("#contador");
+    const cantidad = Number(contador.value);
+    
+    // Obtenemos información del producto para mostrar en la confirmación
+    const producto = data.find(prod => prod.id === idProducto);
+    
+    // Mostramos SweetAlert de confirmación
+    Swal.fire({
+        title: "¿Estás seguro?",
+        html: `
+            <div class="text-start">
+                <p>Vas a agregar al carrito:</p>
+                <p><strong>${producto.nombre}</strong></p>
+                <p><strong>Cantidad:</strong> ${cantidad}</p>
+                <p><strong>Total:</strong> $${(producto.precio * cantidad).toLocaleString()}</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Sí, agregar al carrito",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#4c8a4cff",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma, procedemos a agregar al carrito
+            agregarAlCarrito(idProducto);
+        } else if (result.isDismissed) {
+            // Si el usuario cancela, mostramos un mensaje informativo
+            Swal.fire({
+                title: "Cancelado X",
+                text: "El producto no fue agregado al carrito",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
 // Función para aumentar la cantidad del producto CON VALIDACIÓN DE STOCK
 function aumentarCantidad() {
     // Capturamos el elemento input del contador
@@ -122,7 +164,7 @@ function aumentarCantidad() {
         contador.value = valorActual + 1;
     } else {
         // Si no hay stock, mostramos un mensaje al usuario
-        mostrarNotificacion("No hay suficiente stock disponible", 'error');
+        mostrarNotificacionToastify("No hay suficiente stock disponible", 'error');
     }
 }
 
@@ -141,44 +183,35 @@ function disminuirCantidad() {
     // Si es 1 o menos, no hacemos nada (ya está en el mínimo)
 }
 
-// Función para mostrar notificaciones elegantes (toast de Bootstrap)
-function mostrarNotificacion(mensaje, tipo = 'success') {
-    // 'tipo' puede ser: 'success', 'error', 'warning' para diferentes colores
+// Función para mostrar notificaciones con Toastify.js -- CLASE 25
+function mostrarNotificacionToastify(mensaje, tipo = 'success') {
+    // Configuramos los estilos según el tipo de notificación
+    let backgroundColor = '';
     
-    // Definimos los colores de fondo según el tipo de notificación
-    const colores = {
-        'success': 'bg-success', // Verde para operaciones exitosas
-        'error': 'bg-danger',    // Rojo para errores
-        'warning': 'bg-warning'  // Amarillo para advertencias
-    };
+    switch(tipo) {
+        case 'success':
+            backgroundColor = 'linear-gradient(to right, #4c8a4cff)';
+            break;
+        case 'error':
+            backgroundColor = 'linear-gradient(to right, #ce5c66ff)';
+            break;
+        case 'warning':
+            backgroundColor = 'linear-gradient(to right, #eea849)';
+            break;
+        default:
+            backgroundColor = 'linear-gradient(to right, #00b09b)';
+    }
     
-    // Creamos el elemento toast (notificación) dinámicamente
-    const toast = document.createElement('div');
-    // Aplicamos clases de Bootstrap para el estilo y posición
-    toast.className = `toast align-items-center text-white ${colores[tipo]} border-0 position-fixed top-0 end-0 m-3`;
-    // Estructura HTML interna del toast
-    toast.innerHTML = `
-        <div class="d-flex">
-            <!-- Cuerpo del toast donde va el mensaje -->
-            <div class="toast-body">${mensaje}</div>
-            <!-- Botón para cerrar la notificación -->
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    // Agregamos el toast al final del cuerpo del documento
-    document.body.appendChild(toast);
-    
-    // Creamos una instancia de Toast de Bootstrap con el elemento
-    const bsToast = new bootstrap.Toast(toast);
-    // Mostramos el toast
-    bsToast.show();
-    
-    // Evento que se ejecuta cuando el toast se oculta
-    toast.addEventListener('hidden.bs.toast', () => {
-        // Removemos el toast del DOM para limpiar
-        toast.remove();
-    });
+    // Creamos y mostramos la notificación con Toastify
+    Toastify({
+        text: mensaje,
+        duration: 3000, // 3 segundos
+        gravity: "top", // Posición: top, bottom
+        position: "right", // Posición: left, center, right
+        backgroundColor: backgroundColor,
+        stopOnFocus: true, // Prevenir que se cierre al hacer hover
+        onClick: function(){} // Callback al hacer click
+    }).showToast();
 }
 
 // Función para agregar productos al carrito CON VALIDACIONES 
@@ -190,7 +223,7 @@ function agregarAlCarrito(idProducto) {
     
     // VALIDACIÓN 1: Verificamos que la cantidad sea al menos 1
     if (cantidad < 1) {
-        mostrarNotificacion("La cantidad mínima es 1", 'error');
+        mostrarNotificacionToastify("La cantidad mínima es 1", 'error');
         return; // Salimos de la función sin agregar al carrito
     }
     
@@ -202,7 +235,7 @@ function agregarAlCarrito(idProducto) {
     
     // VALIDACIÓN 2: Verificamos que haya suficiente stock disponible
     if (cantidad > producto.stock) {
-        mostrarNotificacion(`No hay suficiente stock. Stock disponible: ${producto.stock}`, 'error');
+        mostrarNotificacionToastify(`No hay suficiente stock. Stock disponible: ${producto.stock}`, 'error');
         return; // Salimos de la función sin agregar al carrito
     }
     
@@ -216,7 +249,7 @@ function agregarAlCarrito(idProducto) {
         
         // VALIDACIÓN 3: Verificamos que la nueva cantidad total no supere el stock
         if (nuevaCantidadTotal > producto.stock) {
-            mostrarNotificacion(`No puedes agregar más de ${producto.stock} unidades de este producto`, 'error');
+            mostrarNotificacionToastify(`No puedes agregar más de ${producto.stock} unidades de este producto`, 'error');
             return; // Salimos de la función sin actualizar el carrito
         }
         
@@ -242,8 +275,8 @@ function agregarAlCarrito(idProducto) {
     // Actualizamos la cantidad total mostrada en el navbar
     actualizarCantidadTotal();
     
-    // Mostramos notificación de éxito elegante
-    mostrarNotificacion(`✅ ${cantidad} ${producto.nombre} agregado(s) al carrito`);
+    // Mostramos notificación de éxito con Toastify
+    mostrarNotificacionToastify(`${cantidad} ${producto.nombre} agregado(s) al carrito`);
     
     // Opcional: Resetear el contador a 1 después de agregar
     contador.value = 1;

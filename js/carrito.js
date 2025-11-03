@@ -1,44 +1,35 @@
 // js/carrito.js
 // Este archivo maneja la visualización y funcionalidad del carrito de compras
 
-// Función para mostrar notificaciones elegantes (toast de Bootstrap)
-function mostrarNotificacion(mensaje, tipo = 'success') {
-    // 'tipo' puede ser: 'success', 'error', 'warning' para diferentes colores
+// Función para mostrar notificaciones con Toastify.js
+function mostrarNotificacionToastify(mensaje, tipo = 'success') {
+    // Configuramos los estilos según el tipo de notificación
+    let backgroundColor = '';
     
-    // Definimos los colores de fondo según el tipo de notificación
-    const colores = {
-        'success': 'bg-success', // Verde para operaciones exitosas
-        'error': 'bg-danger',    // Rojo para errores
-        'warning': 'bg-warning'  // Amarillo para advertencias
-    };
+    switch(tipo) {
+        case 'success':
+            backgroundColor = 'linear-gradient(to right, #4c8a4cff)';
+            break;
+        case 'error':
+            backgroundColor = 'linear-gradient(to right, #ff5f6d)';
+            break;
+        case 'warning':
+            backgroundColor = 'linear-gradient(to right, #eea849)';
+            break;
+        default:
+            backgroundColor = 'linear-gradient(to right, #00b09b)';
+    }
     
-    // Creamos el elemento toast (notificación) dinámicamente
-    const toast = document.createElement('div');
-    // Aplicamos clases de Bootstrap para el estilo y posición
-    toast.className = `toast align-items-center text-white ${colores[tipo]} border-0 position-fixed top-0 end-0 m-3`;
-    // Estructura HTML interna del toast
-    toast.innerHTML = `
-        <div class="d-flex">
-            <!-- Cuerpo del toast donde va el mensaje -->
-            <div class="toast-body">${mensaje}</div>
-            <!-- Botón para cerrar la notificación -->
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    // Agregamos el toast al final del cuerpo del documento
-    document.body.appendChild(toast);
-    
-    // Creamos una instancia de Toast de Bootstrap con el elemento
-    const bsToast = new bootstrap.Toast(toast);
-    // Mostramos el toast
-    bsToast.show();
-    
-    // Evento que se ejecuta cuando el toast se oculta
-    toast.addEventListener('hidden.bs.toast', () => {
-        // Removemos el toast del DOM para limpiar
-        toast.remove();
-    });
+    // Creamos y mostramos la notificación con Toastify
+    Toastify({
+        text: mensaje,
+        duration: 3000, // 3 segundos
+        gravity: "top", // Posición: top, bottom
+        position: "right", // Posición: left, center, right
+        backgroundColor: backgroundColor,
+        stopOnFocus: true, // Prevenir que se cierre al hacer hover
+        onClick: function(){} // Callback al hacer click
+    }).showToast();
 }
 
 // Función principal que se ejecuta cuando se carga la página del carrito
@@ -139,7 +130,7 @@ function mostrarCarrito() {
                         <p class="fw-bold mb-1">$${subtotal.toLocaleString()}</p>
                         <!-- Botón para eliminar producto del carrito -->
                         <button class="btn btn-outline-danger btn-sm" 
-                                onclick="eliminarProducto(${index})">
+                                onclick="confirmarEliminarProducto(${index})">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -183,12 +174,12 @@ function mostrarCarrito() {
                         </div>
                         
                         <!-- Botón de checkout -->
-                        <button class="btn btn-dark w-100 mb-3" onclick="procederPago()">
+                        <button class="btn btn-dark w-100 mb-3" onclick="confirmarProcederPago()">
                             <i class="bi bi-credit-card me-2"></i>Proceder al pago
                         </button>
                         
                         <!-- Botón para limpiar carrito -->
-                        <button class="btn btn-outline-danger w-100" onclick="limpiarCarrito()">
+                        <button class="btn btn-outline-danger w-100" onclick="confirmarLimpiarCarrito()">
                             <i class="bi bi-trash me-2"></i>Vaciar carrito
                         </button>
                     </div>
@@ -201,13 +192,121 @@ function mostrarCarrito() {
     contenedorCarrito.innerHTML = htmlCarrito;
 }
 
+// Función para confirmar eliminar producto con SweetAlert2
+function confirmarEliminarProducto(indice) {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    const producto = carrito[indice];
+    
+    if (!producto) {
+        mostrarNotificacionToastify("Error: Producto no encontrado", 'error');
+        return;
+    }
+    
+    Swal.fire({
+        title: "¿Estás seguro?",
+        html: `
+            <div class="text-start">
+                <p>Vas a eliminar del carrito:</p>
+                <p><strong>${producto.nombre}</strong></p>
+                <p><strong>Cantidad:</strong> ${producto.cantidad}</p>
+                <p><strong>Subtotal:</strong> $${(producto.precio * producto.cantidad).toLocaleString()}</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            eliminarProducto(indice);
+        } else if (result.isDismissed) {
+            mostrarNotificacionToastify("Eliminación cancelada", 'info');
+        }
+    });
+}
+
+// Función para confirmar vaciar carrito con SweetAlert2
+function confirmarLimpiarCarrito() {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    
+    if (carrito.length === 0) {
+        mostrarNotificacionToastify("El carrito ya está vacío", 'info');
+        return;
+    }
+    
+    Swal.fire({
+        title: "¿Estás seguro?",
+        html: `
+            <div class="text-start">
+                <p>Vas a vaciar todo el carrito de compras.</p>
+                <p><strong>Productos en el carrito:</strong> ${carrito.length}</p>
+                <p><strong>Total a eliminar:</strong> $${carrito.reduce((total, prod) => total + (prod.precio * prod.cantidad), 0).toLocaleString()}</p>
+                <p class="text-danger"><small>Esta acción no se puede deshacer</small></p>
+            </div>
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, vaciar carrito",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            limpiarCarrito();
+        } else if (result.isDismissed) {
+            mostrarNotificacionToastify("Operación cancelada", 'info');
+        }
+    });
+}
+
+// Función para confirmar proceder al pago con SweetAlert2
+function confirmarProcederPago() {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    const totalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+    
+    if (carrito.length === 0) {
+        mostrarNotificacionToastify("El carrito está vacío", 'warning');
+        return;
+    }
+    
+    Swal.fire({
+        title: "¿Proceder al pago?",
+        html: `
+            <div class="text-start">
+                <p>Estás a punto de proceder con el pago de:</p>
+                <p><strong>Productos:</strong> ${carrito.length}</p>
+                <p><strong>Total a pagar:</strong> $${totalCarrito.toLocaleString()}</p>
+                <div class="mt-3">
+                    <small class="text-muted">Esta es una simulación. En un entorno real se integraría con una pasarela de pago.</small>
+                </div>
+            </div>
+        `,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, proceder al pago",
+        cancelButtonText: "Seguir comprando",
+        confirmButtonColor: "#198754",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            procederPago();
+        } else if (result.isDismissed) {
+            mostrarNotificacionToastify("Puedes seguir agregando productos", 'info');
+        }
+    });
+}
+
 // Función para actualizar la cantidad de un producto EN EL CARRITO CON VALIDACIONES
 function actualizarCantidad(indice, nuevaCantidad) {
     // VALIDACIÓN 1: Verificamos que la cantidad sea un número válido
     if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
         // Si no es válida, establecemos el mínimo en 1
         nuevaCantidad = 1;
-        mostrarNotificacion("❌ La cantidad mínima es 1", 'error');
+        mostrarNotificacionToastify("La cantidad mínima es 1", 'error');
         return; // Salimos de la función
     }
     
@@ -221,7 +320,7 @@ function actualizarCantidad(indice, nuevaCantidad) {
         
         // VALIDACIÓN 2: Verificamos que la nueva cantidad no supere el stock disponible
         if (nuevaCantidad > productoOriginal.stock) {
-            mostrarNotificacion(`❌ No hay suficiente stock. Máximo disponible: ${productoOriginal.stock}`, 'error');
+            mostrarNotificacionToastify(`No hay suficiente stock. Máximo disponible: ${productoOriginal.stock}`, 'error');
             
             // Forzamos el valor máximo permitido (el stock disponible)
             nuevaCantidad = productoOriginal.stock;
@@ -246,70 +345,83 @@ function actualizarCantidad(indice, nuevaCantidad) {
         mostrarCarrito();
         
         // Mostramos notificación de éxito
-        mostrarNotificacion("✅ Cantidad actualizada correctamente");
+        mostrarNotificacionToastify("Cantidad actualizada correctamente");
     } else {
         // Si el índice no es válido, mostramos error
-        mostrarNotificacion("❌ Error: Producto no encontrado en el carrito", 'error');
+        mostrarNotificacionToastify("Error: Producto no encontrado en el carrito", 'error');
     }
 }
 
-// Función para eliminar un producto del carrito
+// Función para eliminar un producto del carrito (ahora se llama desde SweetAlert)
 function eliminarProducto(indice) {
     // Obtenemos el carrito actual desde localStorage
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     
     // Verificamos que el índice sea válido
     if (carrito[indice]) {
-        // Obtenemos el nombre del producto para el mensaje de confirmación
+        // Obtenemos el nombre del producto para el mensaje
         const nombreProducto = carrito[indice].nombre;
         
-        // Mostramos confirmación antes de eliminar
-        if (confirm(`¿Estás seguro de que quieres eliminar "${nombreProducto}" del carrito?`)) {
-            // Eliminamos el producto del carrito usando splice
-            // splice(indice, 1) elimina 1 elemento en la posición del índice
-            carrito.splice(indice, 1);
-            
-            // Guardamos el carrito actualizado en localStorage
-            localStorage.setItem("carrito", JSON.stringify(carrito));
-            
-            // Actualizamos la cantidad total en el navbar
-            actualizarCantidadTotal();
-            
-            // Recargamos la vista del carrito para mostrar los cambios
-            mostrarCarrito();
-            
-            // Mostramos notificación de éxito
-            mostrarNotificacion("✅ Producto eliminado del carrito");
-        }
-    } else {
-        mostrarNotificacion("❌ Error: Producto no encontrado", 'error');
-    }
-}
-
-// Función para limpiar todo el carrito
-function limpiarCarrito() {
-    // Mostramos confirmación antes de vaciar todo el carrito
-    if (confirm("¿Estás seguro de que quieres vaciar todo el carrito? Esta acción no se puede deshacer.")) {
-        // Limpiamos el carrito guardando un array vacío
-        localStorage.setItem("carrito", JSON.stringify([]));
-        // Reseteamos la cantidad total a 0
-        localStorage.setItem("cantidad", "0");
+        // Eliminamos el producto del carrito usando splice
+        // splice(indice, 1) elimina 1 elemento en la posición del índice
+        carrito.splice(indice, 1);
         
-        // Actualizamos la cantidad en el navbar
+        // Guardamos el carrito actualizado en localStorage
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+        
+        // Actualizamos la cantidad total en el navbar
         actualizarCantidadTotal();
         
-        // Recargamos la vista del carrito (mostrará el carrito vacío)
+        // Recargamos la vista del carrito para mostrar los cambios
         mostrarCarrito();
         
         // Mostramos notificación de éxito
-        mostrarNotificacion("✅ Carrito vaciado correctamente");
+        mostrarNotificacionToastify(`${nombreProducto} eliminado del carrito`);
+    } else {
+        mostrarNotificacionToastify("Error: Producto no encontrado", 'error');
     }
+}
+
+// Función para limpiar todo el carrito (ahora se llama desde SweetAlert)
+function limpiarCarrito() {
+    // Limpiamos el carrito guardando un array vacío
+    localStorage.setItem("carrito", JSON.stringify([]));
+    // Reseteamos la cantidad total a 0
+    localStorage.setItem("cantidad", "0");
+    
+    // Actualizamos la cantidad en el navbar
+    actualizarCantidadTotal();
+    
+    // Recargamos la vista del carrito (mostrará el carrito vacío)
+    mostrarCarrito();
+    
+    // Mostramos notificación de éxito
+    mostrarNotificacionToastify("Carrito vaciado correctamente");
 }
 
 // Función para proceder al pago (simulación)
 function procederPago() {
-    // Por ahora es una simulación, en un proyecto real aquí iría la integración con pasarela de pago
-    mostrarNotificacion("¡Funcionalidad de pago en desarrollo! Por ahora esto es una simulación.", 'warning');
+    // Simulación de proceso de pago exitoso
+    Swal.fire({
+        title: "¡Pago exitoso!",
+        html: `
+            <div class="text-start">
+                <p>Tu pedido ha sido procesado correctamente.</p>
+                <p><strong>Número de orden:</strong> #${Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                <p>Recibirás un correo de confirmación shortly.</p>
+            </div>
+        `,
+        icon: "success",
+        confirmButtonText: "Continuar",
+        confirmButtonColor: "#198754"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Limpiar carrito después de pago exitoso
+            limpiarCarrito();
+            // Redirigir a home
+            window.location.href = "./index.html";
+        }
+    });
 }
 
 // Función para actualizar la cantidad total en el navbar
