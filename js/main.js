@@ -1,114 +1,172 @@
 // js/main.js
-// Este archivo maneja la lógica de la página principal (index.html)
+// Este archivo maneja la lógica de la página principal (index.html) CON ASINCRONÍA
 
-// Capturamos el elemento main donde mostraremos los productos
-const main = document.querySelector("#contenedorProductos");
+
+//CLASE 26-27
+// Función para simular carga asincrónica de productos CON PROMESA
+function cargarProductos() {
+    // Mostrar spinner y ocultar grilla
+    document.getElementById('spinnerLoader').style.display = 'block';
+    document.getElementById('grillaProductos').style.display = 'none';
+    
+    // Crear promesa con setTimeout de 3 segundos 
+    const promesaProductos = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // Simulamos que siempre se resuelve correctamente
+            resolve(data); // 'data' es nuestro array de productos
+        }, 3000); //3 segundos de espera
+    });
+    
+    // Manejar la promesa CON THEN, CATCH, FINALLY 
+    promesaProductos
+        .then(productos => {
+            // ÉXITO: Ocultar spinner y mostrar grilla
+            document.getElementById('spinnerLoader').style.display = 'none';
+            document.getElementById('grillaProductos').style.display = 'flex';
+            
+            // Renderizar productos
+            renderizarProductos(productos);
+        })
+        .catch(error => {
+            // ERROR: Mostrar mensaje de error
+            console.error('Error cargando productos:', error);
+            document.getElementById('spinnerLoader').innerHTML = `
+                <div class="alert alert-danger">
+                    Error al cargar los productos. Intenta nuevamente.
+                </div>
+            `;
+        })
+        .finally(() => {
+            // SIEMPRE SE EJECUTA
+            console.log('Carga de productos finalizada');
+        });
+}
 
 // Función que recibe una lista de productos y los muestra en pantalla
-function mostrarProductos(productos) {
-    // Limpiamos el contenido anterior del main
-    main.innerHTML = "";
+function renderizarProductos(productos) {
+    const contenedor = document.getElementById('grillaProductos');
+    let html = '';
     
     // Verificamos si hay productos para mostrar
     if (productos.length === 0) {
-        // Si no hay productos, mostramos mensaje
-        main.innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos.</p>`;
-        return; // Salimos de la función
+        html = `<p class="text-center text-muted mt-4">No se encontraron productos.</p>`;
+    } else {
+        // Recorremos cada producto del array con forEach
+        productos.forEach((producto) => {
+            html += `
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="${producto.imagen}" class="card-img-top" alt="${producto.nombre}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">${producto.nombre}</h5>
+                        <p class="card-text text-muted">${producto.categoria}</p>
+                        <p class="card-text fw-bold text-primary">$${producto.precio.toLocaleString()}</p>
+                        <div class="mt-auto">
+                            <a href="./producto.html?prod=${producto.id}" class="btn btn-dark w-100">Ver detalle</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
     }
     
-    // Recorremos cada producto del array con forEach
-    productos.forEach((producto) => {
-        // Por cada producto, agregamos una tarjeta al main - ESTILO ORIGINAL
-        main.innerHTML += `
-        <div class="card m-3" style="width: 18rem;">
-            <!-- Imagen del producto -->
-            <img src="${producto.imagen}" class="card-img-top" alt="${producto.nombre}">
-            <div class="card-body">
-                <!-- Nombre del producto -->
-                <h5 class="fw-bold mb-3">${producto.nombre}</h5>
-                <!-- Precio formateado con separadores de miles -->
-                <p class="text-muted"><strong>Precio: </strong> $${producto.precio.toLocaleString()}</p>
-                <!-- Categoría del producto -->
-                <p class="text-muted"><strong>Categoría: </strong>${producto.categoria}</p>
-                <!-- Enlace para ver el detalle del producto -->
-                <!-- El parámetro ?prod=ID lleva el ID del producto a la página de detalle -->
-                <a href="./producto.html?prod=${producto.id}" class="btn btn-dark">Ver detalle</a>
-            </div>
-        </div>`;
+    contenedor.innerHTML = html;
+}
+
+// Añadimos evento a cada categoría del navbar para filtrar productos
+function configurarFiltros() {
+    document.querySelectorAll(".categoria-link").forEach((enlace) => {
+        enlace.addEventListener("click", (evento) => {
+            evento.preventDefault();
+            
+            const categoria = evento.target.dataset.categoria;
+            const productosFiltrados = data.filter((producto) => producto.categoria === categoria);
+            
+            // Mostrar spinner al filtrar
+            document.getElementById('spinnerLoader').style.display = 'block';
+            document.getElementById('grillaProductos').style.display = 'none';
+            
+            // Simular carga asincrónica también en filtros
+            setTimeout(() => {
+                document.getElementById('spinnerLoader').style.display = 'none';
+                document.getElementById('grillaProductos').style.display = 'flex';
+                renderizarProductos(productosFiltrados);
+            }, 1000);
+        });
     });
 }
 
-// Mostramos todos los productos cuando se abre la página por primera vez
-mostrarProductos(data);
-
-// Añadimos evento a cada categoría del navbar para filtrar productos
-document.querySelectorAll(".categoria-link").forEach((enlace) => {
-    // Por cada enlace de categoría, agregamos un evento click
-    enlace.addEventListener("click", (evento) => {
-        // Prevenimos el comportamiento por defecto del enlace (navegación)
-        evento.preventDefault();
-        
-        // Obtenemos la categoría del atributo data-categoria del enlace clickeado
-        const categoria = evento.target.dataset.categoria;
-        
-        // Filtramos los productos que coincidan con la categoría seleccionada
-        // filter() crea un nuevo array con los elementos que cumplen la condición
-        const productosFiltrados = data.filter((producto) => producto.categoria === categoria);
-        
-        // Mostramos solo los productos filtrados
-        mostrarProductos(productosFiltrados);
-    });
-});
-
 // --- BUSCADOR ---
-// Capturamos los elementos del buscador
-const buscarInput = document.getElementById("buscarInput");
-const botonBuscar = document.getElementById("botonBuscar");
-const botonLimpiar = document.getElementById("botonLimpiar");
+function configurarBuscador() {
+    const buscarInput = document.getElementById("buscarInput");
+    const botonBuscar = document.getElementById("botonBuscar");
+    const botonLimpiar = document.getElementById("botonLimpiar");
 
-// Evento para el botón de buscar
-botonBuscar.addEventListener("click", () => {
-    // Obtenemos y normalizamos el texto de búsqueda
-    const textoBusqueda = buscarInput.value
-        .toLowerCase()                    // Convertimos a minúsculas para búsqueda case-insensitive
-        .normalize("NFD")                 // Normalizamos el texto para separar caracteres con tildes
-        .replace(/[\u0300-\u036f]/g, "")  // Eliminamos los diacríticos (tildes)
-        .trim();                          // Eliminamos espacios al inicio y final
-
-    // Filtramos los productos cuyo nombre incluya el texto de búsqueda
-    const productosFiltrados = data.filter(producto =>
-        producto.nombre
+    // Evento para el botón de buscar
+    botonBuscar.addEventListener("click", () => {
+        const textoBusqueda = buscarInput.value
             .toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
-            .includes(textoBusqueda)      // Verifica si el nombre incluye el texto buscado
-    );
+            .trim();
 
-    // Mostramos los productos filtrados
-    mostrarProductos(productosFiltrados);
+        const productosFiltrados = data.filter(producto =>
+            producto.nombre
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .includes(textoBusqueda)
+        );
 
-    // Si no hay resultados, mostramos mensaje
-    if (productosFiltrados.length === 0) {
-        main.innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos con ese nombre.</p>`;
-    }
-});
+        // Mostrar spinner al buscar
+        document.getElementById('spinnerLoader').style.display = 'block';
+        document.getElementById('grillaProductos').style.display = 'none';
+        
+        // Simular carga asincrónica
+        setTimeout(() => {
+            document.getElementById('spinnerLoader').style.display = 'none';
+            document.getElementById('grillaProductos').style.display = 'flex';
+            renderizarProductos(productosFiltrados);
+            
+            if (productosFiltrados.length === 0) {
+                document.getElementById('grillaProductos').innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos con ese nombre.</p>`;
+            }
+        }, 1000);
+    });
 
-// --- LIMPIAR BUSCADOR ---
-botonLimpiar.addEventListener("click", () => {
-    // Limpiamos el campo de búsqueda
-    buscarInput.value = "";
-    // Mostramos todos los productos nuevamente
-    mostrarProductos(data);
-});
+    // --- LIMPIAR BUSCADOR ---
+    botonLimpiar.addEventListener("click", () => {
+        buscarInput.value = "";
+        // Mostrar spinner al limpiar
+        document.getElementById('spinnerLoader').style.display = 'block';
+        document.getElementById('grillaProductos').style.display = 'none';
+        
+        // Simular carga asincrónica
+        setTimeout(() => {
+            document.getElementById('spinnerLoader').style.display = 'none';
+            document.getElementById('grillaProductos').style.display = 'flex';
+            renderizarProductos(data);
+        }, 1000);
+    });
 
-// --- BUSCADOR CON TECLA ENTER --- (MEJORA ADICIONAL OPCIONAL)
-// Permitir buscar presionando Enter en el input
-buscarInput.addEventListener("keypress", (evento) => {
-    // Verificamos si la tecla presionada es Enter (código 13)
-    if (evento.key === "Enter") {
-        // Prevenimos el comportamiento por defecto (enviar formulario)
-        evento.preventDefault();
-        // Disparamos el evento de click en el botón buscar
-        botonBuscar.click();
-    }
+    // --- BUSCADOR CON TECLA ENTER ---
+    buscarInput.addEventListener("keypress", (evento) => {
+        if (evento.key === "Enter") {
+            evento.preventDefault();
+            botonBuscar.click();
+        }
+    });
+}
+
+// Ejecutar cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Iniciar carga asincrónica de productos
+    cargarProductos();
+    
+    // Configurar eventos después de que se cargue el navbar
+    setTimeout(() => {
+        configurarFiltros();
+        configurarBuscador();
+    }, 100);
 });

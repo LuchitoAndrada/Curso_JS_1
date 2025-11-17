@@ -1,6 +1,7 @@
 // js/carrito.js
 // Este archivo maneja la visualización y funcionalidad del carrito de compras
-
+// URL de tu MockAPI (REEMPLAZA CON TU URL REAL DE MOCKAPI)
+const MOCKAPI_URL = 'https://691b9fb53aaeed735c8dc5d5.mockapi.io/orders';
 // Función para mostrar notificaciones con Toastify.js
 function mostrarNotificacionToastify(mensaje, tipo = 'success') {
     // Configuramos los estilos según el tipo de notificación
@@ -399,31 +400,97 @@ function limpiarCarrito() {
     mostrarNotificacionToastify("Carrito vaciado correctamente");
 }
 
-// Función para proceder al pago (simulación)
+// Función para proceder al pago con Fetch API - CLASE 28
 function procederPago() {
-    // Simulación de proceso de pago exitoso
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    const usuario = localStorage.getItem("email");
+    
+    if (carrito.length === 0) {
+        Swal.fire({
+            title: "Carrito vacío",
+            text: "Agrega productos al carrito antes de proceder al pago",
+            icon: "warning",
+            confirmButtonText: "Entendido"
+        });
+        return;
+    }
+    
+    // Calcular total
+    const totalCarrito = carrito.reduce((total, producto) => {
+        return total + (producto.precio * producto.cantidad);
+    }, 0);
+    
+    // Datos para enviar a la API 
+    const ordenData = {
+        user: usuario,
+        items: carrito,
+        total: totalCarrito,
+        fecha: new Date().toISOString()
+    };
+    
+    // Mostrar loading en SweetAlert
     Swal.fire({
-        title: "¡Pago exitoso!",
-        html: `
-            <div class="text-start">
-                <p>Tu pedido ha sido procesado correctamente.</p>
-                <p><strong>Número de orden:</strong> #${Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
-                <p>Recibirás un correo de confirmación shortly.</p>
-            </div>
-        `,
-        icon: "success",
-        confirmButtonText: "Continuar",
-        confirmButtonColor: "#198754"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Limpiar carrito después de pago exitoso
-            limpiarCarrito();
-            // Redirigir a home
-            window.location.href = "./index.html";
+        title: 'Procesando pedido...',
+        text: 'Por favor espera',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
         }
     });
+    
+    // Hacer fetch POST a MockAPI 
+    fetch(MOCKAPI_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ordenData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // ÉXITO: Mostrar SweetAlert con éxito 
+        Swal.fire({
+            title: "¡Pedido creado exitosamente!",
+            html: `
+                <div class="text-start">
+                    <p><strong>Usuario:</strong> ${usuario}</p>
+                    <p><strong>Número de orden:</strong> #${data.id}</p>
+                    <p><strong>Total:</strong> $${totalCarrito.toLocaleString()}</p>
+                    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
+                </div>
+            `,
+            icon: "success",
+            confirmButtonText: "Continuar",
+            confirmButtonColor: "#198754"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Limpiar carrito después de éxito
+                limpiarCarrito();
+                // Redirigir a home
+                window.location.href = "./index.html";
+            }
+        });
+    })
+    .catch(error => {
+        // ERROR: Mostrar SweetAlert con error 
+        console.error('Error:', error);
+        Swal.fire({
+            title: "Error al procesar el pedido",
+            text: "No se pudo crear la orden. Por favor, intenta nuevamente.",
+            icon: "error",
+            confirmButtonText: "Entendido"
+        });
+    })
+    .finally(() => {
+        // Este bloque se ejecuta siempre, haya éxito o error
+        console.log('Proceso de checkout finalizado');
+    });
 }
-
 // Función para actualizar la cantidad total en el navbar
 function actualizarCantidadTotal() {
     // Obtenemos el carrito actual

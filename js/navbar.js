@@ -1,4 +1,4 @@
-// navbar.js - ACTUALIZADO PARA MOSTRAR EL NOMBRE DEL USUARIO
+// navbar.js 
 
 // Array con las categorías del ecommerce
 const categorias = ['Aretes', 'Collares', 'Anillos', 'Pulseras', 'Relojes'];
@@ -31,6 +31,12 @@ let sesion = `
                 <i class="bi bi-person-circle me-1"></i>Hola, ${localStorage.getItem("nombre") || "Usuario"}
             </span>
          </li>
+
+         <li class="nav-item">
+          <a class="nav-link text-light" href="./historial.html" style="padding: 8px 16px;">
+              <i class="bi bi-clock-history me-1"></i>Pedidos
+          </a>
+        </li>
          
          <li class="nav-item ms-2">
             <a href="./carrito.html" class="nav-link text-light d-flex align-items-center" style="text-decoration: none;">
@@ -42,7 +48,8 @@ let sesion = `
             <span class="nav-link text-light" onclick="cerrarSesion()" style="cursor: pointer; padding: 8px 16px;">
                 <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
             </span>
-         </li>`
+         </li>
+         `
         : 
         // NO HAY SESIÓN ACTIVA: Mostramos enlace para iniciar sesión
         `<li class="nav-item">

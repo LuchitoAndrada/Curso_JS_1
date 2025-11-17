@@ -48,6 +48,6 @@ const manejarEnvioLogin = (evento) => {
     }
 }
 
-// Agregamos un "escuchador" de eventos al formulario
+// Agregamos un listener de eventos al formulario
 // Cuando el usuario haga submit (envíe el formulario), se ejecutará manejarEnvioLogin
 formularioLogin.addEventListener("submit", manejarEnvioLogin);
