@@ -4,7 +4,7 @@ const data = [
     nombre: "Aretes de perla",
     categoria: "Aretes",
     precio: 55000,
-    stock: 15,
+    stock: 100,
     imagen: "/img/aretesPerla.jpg",
     descripcion: "Elegantes aretes de perla con diseño clásico."
   },
@@ -13,7 +13,7 @@ const data = [
     nombre: "Collar lunar",
     categoria: "Collares",
     precio: 78000,
-    stock: 10,
+    stock: 99,
     imagen: "/img/collarLunar.jpg",
     descripcion: "Collar con colgante de media luna en plata."
   },
@@ -22,7 +22,7 @@ const data = [
     nombre: "Anillo solitario",
     categoria: "Anillos",
     precio: 92000,
-    stock: 8,
+    stock: 80,
     imagen: "/img/anilloSolitario.webp",
     descripcion: "Anillo con una piedra central brillante."
   },
@@ -31,7 +31,7 @@ const data = [
     nombre: "Pulsera de cristales",
     categoria: "Pulseras",
     precio: 63000,
-    stock: 20,
+    stock: 75,
     imagen: "/img/pulseraCristales.jpg",
     descripcion: "Pulsera con cristales transparentes y diseño delicado."
   },
@@ -40,7 +40,7 @@ const data = [
     nombre: "Reloj minimalista",
     categoria: "Relojes",
     precio: 150000,
-    stock: 5,
+    stock: 110,
     imagen: "/img/relojMini.jpg",
     descripcion: "Reloj de diseño minimalista con correa de cuero."
   },
@@ -49,7 +49,7 @@ const data = [
     nombre: "Anillo doble",
     categoria: "Anillos",
     precio: 88000,
-    stock: 12,
+    stock: 88,
     imagen: "/img/anilloDoble.jpg",
     descripcion: "Anillo doble con diseño cruzado."
   },
@@ -58,7 +58,7 @@ const data = [
     nombre: "Pendientes geométricos",
     categoria: "Aretes",
     precio: 48000,
-    stock: 18,
+    stock: 115,
     imagen: "/img/pendientesG.png",
     descripcion: "Aretes con formas geométricas modernos."
   },
@@ -67,7 +67,7 @@ const data = [
     nombre: "Cadena con dije",
     categoria: "Collares",
     precio: 67000,
-    stock: 7,
+    stock: 99,
     imagen: "/img/cadenaDije.avif",
     descripcion: "Cadena delicada con dije pequeño en oro."
   },
@@ -76,7 +76,7 @@ const data = [
     nombre: "Anillo de Compromiso",
     categoria: "Anillos",
     precio: 99000,
-    stock: 14,
+    stock: 100,
     imagen: "/img/anilloCompromiso.jpg",
     descripcion: "Anillo de compromiso elegante de plata."
   }
