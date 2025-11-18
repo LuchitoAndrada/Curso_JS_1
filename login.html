@@ -6,10 +6,7 @@
     <title>Login</title>
 
     <!-- Bootstrap -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
   </head>
 
   <style>
@@ -19,52 +16,36 @@
     }
   </style>
 
-  <!-- En login.html, cambiar el body y agregar los scripts -->
-  <body id="login" class="bg-light">
-    <!-- Header que se llenará con el navbar -->
+<body id="login" class="bg-light">
     <header></header>
     
-    <!-- Contenedor principal centrado verticalmente -->
+
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-      <!-- Tarjeta que contiene el formulario -->
+
       <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
         <h2 class="text-center text-dark mb-4">Iniciar Sesión</h2>
 
-        <!-- Formulario de login - importante tener los atributos name -->
+        <!-- Formulario -->
         <form>
-          <!-- Campo para el email -->
           <div class="mb-3">
             <label class="form-label">Email</label>
-            <input 
-              type="email" 
-              name="email" 
-              class="form-control" 
-              placeholder="Ingresa tu email" 
-              required 
-            />
+            <input type="email" name="email" class="form-control" placeholder="Ingresa tu email" required/>
           </div>
 
-          <!-- Campo para la contraseña -->
           <div class="mb-3">
             <label class="form-label">Contraseña</label>
-            <input 
-              type="password" 
-              name="contraseña" 
-              class="form-control" 
-              placeholder="Ingresa tu contraseña" 
-              required 
-            />
+            <input type="password" name="contraseña" class="form-control" placeholder="Ingresa tu contraseña" required/>
           </div>
 
-          <!-- Elemento donde mostraremos mensajes de error -->
+          <!-- mensaje error -->
           <p id="mensajeLogin" class="text-danger"></p>
 
-          <!-- Botón para enviar el formulario -->
+
           <div class="d-grid mb-3">
             <button type="submit" class="btn btn-dark">Entrar</button>
           </div>
 
-          <!-- Enlace para volver al inicio -->
+
           <div class="text-center">
             <a href="/index.html" class="text-decoration-none text-dark">← Volver al inicio</a>
           </div>
@@ -72,18 +53,18 @@
       </div>
     </div>
 
-    <!-- Footer de la página -->
+    <!-- Footer -->
     <footer class="bg-dark text-center py-3">
         <p class="mb-0 text-light">&copy; 2025 Beauty you. Todos los derechos reservados.</p>  
     </footer>
 
-    <!-- Bootstrap JS para funcionalidades del framework -->
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Nuestros scripts personalizados -->
-    <script src="./js/navbar.js"></script>                          <!-- Navbar dinámico -->
-    <script src="./js/constantes.js"></script>                      <!-- Credenciales de login -->
-    <script src="./js/login.js"></script>                           <!-- Lógica del formulario login -->
-    <script src="./js/redireccionSiAutenticado.js"></script>        <!-- Redirección si ya está logueado -->
-  </body>
+    <!-- Scripts -->
+    <script src="./js/navbar.js"></script>                        
+    <script src="./js/constantes.js"></script>         
+    <script src="./js/login.js"></script>                     
+    <script src="./js/redireccionSiAutenticado.js"></script>     
+</body>
 </html>
