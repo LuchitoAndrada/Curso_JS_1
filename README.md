@@ -9,7 +9,7 @@ Una aplicación web moderna de ecommerce especializada en joyería fina, desarro
 ## ✨ Características Principales
 
 ### 🛍️ Funcionalidades de Tienda
-- **Catálogo de productos** con 9 categorías diferentes
+- **Catálogo de productos** con 5 categorías diferentes
 - **Búsqueda inteligente** con filtrado en tiempo real
 - **Navegación por categorías** (Aretes, Collares, Anillos, Pulseras, Relojes)
 - **Detalles de productos** con galería de imágenes
