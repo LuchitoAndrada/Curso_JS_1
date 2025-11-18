@@ -1,7 +1,6 @@
 // js/main.js
 // Este archivo maneja la lógica de la página principal (index.html) CON ASINCRONÍA
 
-
 //CLASE 26-27
 // Función para simular carga asincrónica de productos CON PROMESA
 function cargarProductos() {
@@ -14,7 +13,7 @@ function cargarProductos() {
         setTimeout(() => {
             // Simulamos que siempre se resuelve correctamente
             resolve(data); // 'data' es nuestro array de productos
-        }, 3000); //3 segundos de espera
+        }, 500); //medio segundos de espera
     });
     
     // Manejar la promesa CON THEN, CATCH, FINALLY 
@@ -24,8 +23,21 @@ function cargarProductos() {
             document.getElementById('spinnerLoader').style.display = 'none';
             document.getElementById('grillaProductos').style.display = 'flex';
             
-            // Renderizar productos
-            renderizarProductos(productos);
+            // Verificar si hay categoría en la URL
+            const categoriaURL = obtenerCategoriaDesdeURL();
+            if (categoriaURL) {
+                // Filtrar productos por categoría
+                const productosFiltrados = productos.filter(producto => 
+                    producto.categoria === categoriaURL
+                );
+                renderizarProductos(productosFiltrados);
+                
+                // Actualizar título para mostrar la categoría
+                actualizarTituloCategoria(categoriaURL);
+            } else {
+                // Mostrar todos los productos
+                renderizarProductos(productos);
+            }
         })
         .catch(error => {
             // ERROR: Mostrar mensaje de error
@@ -42,6 +54,20 @@ function cargarProductos() {
         });
 }
 
+// Función para obtener categoría desde la URL
+function obtenerCategoriaDesdeURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('categoria');
+}
+
+// Función para actualizar el título cuando se filtra por categoría
+function actualizarTituloCategoria(categoria) {
+    const titulo = document.querySelector('main .container h1');
+    if (titulo) {
+        titulo.textContent = `Productos de ${categoria}`;
+    }
+}
+
 // Función que recibe una lista de productos y los muestra en pantalla
 function renderizarProductos(productos) {
     const contenedor = document.getElementById('grillaProductos');
@@ -49,7 +75,21 @@ function renderizarProductos(productos) {
     
     // Verificamos si hay productos para mostrar
     if (productos.length === 0) {
-        html = `<p class="text-center text-muted mt-4">No se encontraron productos.</p>`;
+        const categoria = obtenerCategoriaDesdeURL();
+        if (categoria) {
+            html = `
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-search display-1 text-muted"></i>
+                    <h3 class="text-muted mt-3">No hay productos en "${categoria}"</h3>
+                    <p class="text-muted mb-4">Intenta con otra categoría</p>
+                    <button class="btn btn-dark" onclick="mostrarTodosLosProductos()">
+                        Ver todos los productos
+                    </button>
+                </div>
+            `;
+        } else {
+            html = `<p class="text-center text-muted mt-4">No se encontraron productos.</p>`;
+        }
     } else {
         // Recorremos cada producto del array con forEach
         productos.forEach((producto) => {
@@ -74,6 +114,29 @@ function renderizarProductos(productos) {
     contenedor.innerHTML = html;
 }
 
+// Función para mostrar todos los productos (cuando no hay resultados)
+function mostrarTodosLosProductos() {
+    // Limpiar parámetro de URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // Mostrar spinner
+    document.getElementById('spinnerLoader').style.display = 'block';
+    document.getElementById('grillaProductos').style.display = 'none';
+    
+    // Restaurar título original
+    const titulo = document.querySelector('main .container h1');
+    if (titulo) {
+        titulo.textContent = 'Productos Disponibles';
+    }
+    
+    // Recargar productos después de un delay
+    setTimeout(() => {
+        document.getElementById('spinnerLoader').style.display = 'none';
+        document.getElementById('grillaProductos').style.display = 'flex';
+        renderizarProductos(data);
+    }, 1000);
+}
+
 // Añadimos evento a cada categoría del navbar para filtrar productos
 function configurarFiltros() {
     document.querySelectorAll(".categoria-link").forEach((enlace) => {
@@ -81,18 +144,10 @@ function configurarFiltros() {
             evento.preventDefault();
             
             const categoria = evento.target.dataset.categoria;
-            const productosFiltrados = data.filter((producto) => producto.categoria === categoria);
+            console.log('Filtrando por categoría:', categoria);
             
-            // Mostrar spinner al filtrar
-            document.getElementById('spinnerLoader').style.display = 'block';
-            document.getElementById('grillaProductos').style.display = 'none';
-            
-            // Simular carga asincrónica también en filtros
-            setTimeout(() => {
-                document.getElementById('spinnerLoader').style.display = 'none';
-                document.getElementById('grillaProductos').style.display = 'flex';
-                renderizarProductos(productosFiltrados);
-            }, 1000);
+            // Redirigir a index.html con la categoría como parámetro
+            window.location.href = `./index.html?categoria=${categoria}`;
         });
     });
 }
@@ -130,7 +185,13 @@ function configurarBuscador() {
             renderizarProductos(productosFiltrados);
             
             if (productosFiltrados.length === 0) {
-                document.getElementById('grillaProductos').innerHTML = `<p class="text-center text-muted mt-4">No se encontraron productos con ese nombre.</p>`;
+                document.getElementById('grillaProductos').innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-search display-1 text-muted"></i>
+                        <h3 class="text-muted mt-3">No se encontraron productos</h3>
+                        <p class="text-muted">Intenta con otros términos de búsqueda</p>
+                    </div>
+                `;
             }
         }, 1000);
     });
@@ -141,6 +202,17 @@ function configurarBuscador() {
         // Mostrar spinner al limpiar
         document.getElementById('spinnerLoader').style.display = 'block';
         document.getElementById('grillaProductos').style.display = 'none';
+        
+        // Limpiar parámetros de URL si existen
+        if (window.location.search) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        // Restaurar título original
+        const titulo = document.querySelector('main .container h1');
+        if (titulo) {
+            titulo.textContent = 'Productos Disponibles';
+        }
         
         // Simular carga asincrónica
         setTimeout(() => {
@@ -161,6 +233,8 @@ function configurarBuscador() {
 
 // Ejecutar cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Página cargada - Iniciando configuración');
+    
     // Iniciar carga asincrónica de productos
     cargarProductos();
     
@@ -170,3 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
         configurarBuscador();
     }, 100);
 });
+
+// Hacer la función global para que pueda ser llamada desde el HTML
+window.mostrarTodosLosProductos = mostrarTodosLosProductos;

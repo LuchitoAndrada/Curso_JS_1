@@ -87,50 +87,46 @@ header.innerHTML = `
   </div>
 </nav>`;
 
+// SOLO REEMPLAZA DESDE AQUÍ HACIA ABAJO EN TU NAVBAR.JS ACTUAL:
+
 // Función para cerrar la sesión del usuario
 function cerrarSesion() {
     localStorage.clear();
     window.location.href = "./index.html";
 }
 
-// FUNCIÓN PARA MANEJAR EL CLICK EN CATEGORÍAS
+// FUNCIÓN PARA MANEJAR CLICKS EN CATEGORÍAS
 function manejarClickCategoria(evento) {
     evento.preventDefault();
+    evento.stopPropagation();
     
     const categoria = evento.target.dataset.categoria;
+    console.log('Categoría clickeada:', categoria);
     
-    // Verificamos si estamos en una página que tiene el array 'data'
-    if (typeof data === 'undefined') {
-        // Si no existe 'data', redirigimos al index con parámetro de categoría
-        window.location.href = `./index.html?categoria=${categoria}`;
-    } else {
-        // Si existe 'data', filtramos normalmente (para index.html)
-        const productosFiltrados = data.filter((producto) => producto.categoria === categoria);
-        
-        // Verificamos si existe la función mostrarProductos (solo en index.html)
-        if (typeof mostrarProductos === 'function') {
-            mostrarProductos(productosFiltrados);
-        } else {
-            // Si no existe, redirigimos al index
-            window.location.href = `./index.html?categoria=${categoria}`;
-        }
-    }
+    // Siempre redirigir a index.html con la categoría como parámetro
+    window.location.href = `./index.html?categoria=${categoria}`;
 }
 
-// Agregar event listeners a los enlaces de categoría DESPUÉS de que el navbar se renderice
-document.addEventListener('DOMContentLoaded', function() {
-    // Esperamos un poco para que el navbar se renderice completamente
-    setTimeout(() => {
-        const enlacesCategoria = document.querySelectorAll('.categoria-link');
-        
-        enlacesCategoria.forEach(enlace => {
-            // Removemos cualquier event listener previo para evitar duplicados
-            enlace.replaceWith(enlace.cloneNode(true));
-        });
-        
-        // Agregamos los nuevos event listeners
-        document.querySelectorAll('.categoria-link').forEach(enlace => {
-            enlace.addEventListener('click', manejarClickCategoria);
-        });
-    }, 100);
+
+// CONFIGURACIÓN SIMPLE Y EFECTIVA DE EVENT LISTENERS
+function configurarCategorias() {
+    console.log('Configurando categorías...');
+    
+    const enlaces = document.querySelectorAll('.categoria-link');
+    console.log('📎 Enlaces encontrados:', enlaces.length);
+    
+    enlaces.forEach(enlace => {
+        enlace.onclick = manejarClickCategoria;
+    });
+}
+
+// EJECUTAR INMEDIATAMENTE Y PERIÓDICAMENTE
+configurarCategorias();
+
+// Ejecutar cada vez que el usuario interactúe con la página
+document.addEventListener('click', function() {
+    setTimeout(configurarCategorias, 100);
 });
+
+// Reconfigurar cada segundo por si acaso
+setInterval(configurarCategorias, 1000);
