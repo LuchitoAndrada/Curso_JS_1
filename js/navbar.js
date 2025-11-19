@@ -63,19 +63,19 @@ let sesion = `
 // Obtenemos el elemento header del HTML
 const header = document.querySelector("header");
 
-// Insertamos el navbar completo con estilos elegantes en negro
+// Insertamos el navbar completo dentro del header
 header.innerHTML = `
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm py-3" style="background-color: #1a1a1a; border-bottom: 1px solid #333;">
   <div class="container">
-    <!-- Logo/Marca de la tienda con estilo elegante -->
+    <!-- Nombre de la tienda -->
     <a class="navbar-brand fw-bold fs-3" href="./index.html" style="color: #e0e0e0; letter-spacing: 1px;">Beauty You</a>
     
-    <!-- Botón para colapsar el menú en móviles -->
+    <!-- Boton que se visualiza cuando la pagina se ve a atraves de dispositivos moviles -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: #555;">
       <span class="navbar-toggler-icon"></span>
     </button>
     
-    <!-- Contenedor que se colapsa en móviles -->
+    <!-- Contenedor para dispositivos móviles -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <!-- Menú de categorías -->
       <ul class="navbar-nav ms-auto">
@@ -87,7 +87,7 @@ header.innerHTML = `
   </div>
 </nav>`;
 
-// SOLO REEMPLAZA DESDE AQUÍ HACIA ABAJO EN TU NAVBAR.JS ACTUAL:
+// 
 
 // Función para cerrar la sesión del usuario
 function cerrarSesion() {
@@ -98,6 +98,7 @@ function cerrarSesion() {
 // FUNCIÓN PARA MANEJAR CLICKS EN CATEGORÍAS
 function manejarClickCategoria(evento) {
     evento.preventDefault();
+    // Evita que el clic siga propagándose a elementos padres, previene comportamientos inesperados del navbar (como cierres, recargas o doble ejecución)
     evento.stopPropagation();
     
     const categoria = evento.target.dataset.categoria;
